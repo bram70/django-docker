@@ -1,0 +1,9 @@
+{% if latest_appointments %}
+    <ul>
+    {% for appointment in latest_appointments %}
+    <li><a href="{% url 'calendars:details' appointment.id %}">{{ appointment.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No appointments are available.</p>
+{% endif %}
