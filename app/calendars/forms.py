@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Textarea
 from .models import Appointment
 
-class AppointmentForm(forms.Form):
+class CreateAppointment(forms.ModelForm):
     class Meta:
         model = Appointment
         fields = ('title', 'start', 'end', 'description')

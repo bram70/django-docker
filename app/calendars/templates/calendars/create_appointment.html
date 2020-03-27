@@ -1,6 +1,7 @@
+{% extends 'base.html' %}
 {% block content %}
 <h1> Calendar </h1>
-<form action="." method="post">
+<form class='site-form' action="{% url 'calendars:create_appointment' %}" method="post">
     {% csrf_token %}
     <table>
     {{ form.as_table }}

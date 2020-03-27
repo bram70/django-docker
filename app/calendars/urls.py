@@ -1,10 +1,9 @@
 from django.urls import path
 from . import views
-from calendars.views import AppointmentCreate
 
 app_name = 'calendars'
 urlpatterns = [
-        path('', views.index, name='index'),
-        path('appointment/', AppointmentCreate.as_view(), name='appointment-add'),
-        path('<int:calendar_id>/', views.detail, name='detail'),
+        path('', views.appointment_list, name='appointment_list'),
+        path('appointment/', views.create_appointment, name='create_appointment'),
+        path('<int:appointment_id>/', views.details, name='details'),
         ]

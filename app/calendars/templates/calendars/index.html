@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 {% if latest_appointments %}
     <ul>
     {% for appointment in latest_appointments %}
@@ -7,3 +10,5 @@
 {% else %}
     <p>No appointments are available.</p>
 {% endif %}
+
+{% endblock %}

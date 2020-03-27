@@ -1,10 +1,11 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from django.contrib.auth import login, authenticate 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .models import Appointment
-from .forms import AppointmentForm
+from .forms import CreateAppointment
 
 def signup(request):
     if request.method == 'POST':
@@ -20,32 +21,28 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form })
 
-def index(request):
+@login_required(login_url='/login/')
+def appointment_list(request):
     latest_appointments = Appointment.objects.order_by('-start')[:5]
     context = {
             'latest_appointments': latest_appointments
     }
     return render(request, 'calendars/index.html', context)
 
-def detail(request, appointment_id):
+@login_required(login_url='/login/')
+def details(request, appointment_id):
+    print(appointment_id)
     appointment = get_object_or_404(Appointment, pk=appointment_id)
-    return render(request, 'calendars/detail.html', {'appointment': appointment})
+    return render(request, 'calendars/details.html', {'appointment': appointment})
 
-def get_name(request):
-    print("HERE IT WAS")
+
+@login_required(login_url='/login/')
+def create_appointment(request):
     if request.method == 'POST':
-        form = AppointmentForm(request.POST)
+        form = CreateAppointment(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect('/thanks/')
+            form.save()
+            return redirect('calendars:appointment_list')
     else:
-        form = AppointmentForm(initial={'description': "Type here"})
-        print("Here after", form)
-    return render(request, 'calendars/appointment.html', {'form': form })
-
-class AppointmentCreate(CreateView):
-    model = Appointment
-    fields = ['title', 'description', 'start', 'end']
-
-    def form_valid(self, form):
-#        form.instance.created_by = self.request.user
-        return super().form_valid(form)
+        form = CreateAppointment()
+    return render(request, 'calendars/create_appointment.html', {'form': form})
